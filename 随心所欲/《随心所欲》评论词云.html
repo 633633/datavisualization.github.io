@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>豆瓣Top250电影类型统计词云图</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3-cloud@1.2.7/build/d3.layout.cloud.js"></script>
+  <style>
+    html{
+      width: 100% ;
+      height: 100% ;
+      overflow: hidden;
+    }
+    body {
+      width: 100%;
+      height: 100%;
+    }
+    /* 设置字体样式 */
+    text {
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+    }
+
+    /* 设置词云图形状 */
+    .shape {
+      clip-path: url(/Users/jinxiao/Downloads/apache-tomcat-9.0.36/webapps/dataviz2023/期末/人1.png);
+    }
+
+    /* 光标交互效果 */
+    .shape:hover {
+      fill: rgb(233, 201, 87);
+      transform: scale(1.2);
+      transition: fill 1s, transform 1s;
+    }
+  </style>
+</head>
+<body>
+  <svg width="0" height="0">
+    <defs>
+      <!-- 定义词云图形状的剪辑路径 -->
+      <clipPath id="shapeClipPath">
+        <!-- <image xlink:href="shape.jpg" width="800" height="500" /> -->
+      </clipPath>
+    </defs>
+  </svg>
+  <script>
+    // 数据：豆瓣Top250榜单中前20名电影的类型统计
+    var data = [
+      { "genre": "戈达尔", "count": 118 },
+      { "genre": "电影", "count": 101 },
+      { "genre": "自己", "count": 66 },
+      { "genre": "镜头", "count": 54 },
+      { "genre": "生活", "count": 51 },
+      { "genre": "就是", "count": 49 },
+      { "genre": "妓女", "count": 45 },
+      { "genre": "女人", "count": 43 },
+      { "genre": "贞德", "count": 41 },
+      { "genre": "圣女", "count": 40 },
+      { "genre": "安娜", "count": 40 },
+      { "genre": "哲学", "count": 37 },
+      { "genre": "语言", "count": 35 },
+      { "genre": "责任", "count": 34 },
+      { "genre": "娜娜", "count": 27 },
+      { "genre": "死亡", "count": 26 },
+      { "genre": "喜欢", "count": 26 },
+      { "genre": "自由", "count": 23 },
+      { "genre": "男人", "count": 23 },
+      { "genre": "故事", "count": 22 },
+      { "genre": "最后", "count": 22 },
+      { "genre": "随心所欲", "count": 22 },
+      { "genre": "我们", "count": 22 },
+      { "genre": "影像", "count": 21 },
+      { "genre": "观众", "count": 20 },
+      { "genre": "思考", "count": 20 },
+      { "genre": "法国", "count": 18 },
+      { "genre": "对话", "count": 18 },
+      { "genre": "结尾", "count": 17 },
+      { "genre": "一样", "count": 17 },
+      { "genre": "卡里", "count": 16 },
+      { "genre": "没有", "count": 16 },
+      { "genre": "时候", "count": 16 },
+      { "genre": "女主", "count": 16 },
+      { "genre": "成为", "count": 16 },
+      { "genre": "存在", "count": 15 },
+      { "genre": "跳舞", "count": 14 },
+      { "genre": "存在主义", "count": 14 },
+      { "genre": "本身", "count": 14 },
+      { "genre": "什么", "count": 14 },
+      { "genre": "意义", "count": 14 },
+      { "genre": "画面", "count": 14 },
+      { "genre": "特写", "count": 14 },
+      { "genre": "一种", "count": 14 },
+      { "genre": "她们", "count": 14 },
+      { "genre": "其实", "count": 13 },
+      { "genre": "只是", "count": 13 },
+      { "genre": "蒙难记", "count": 13 },
+      { "genre": "一切", "count": 13 },
+      { "genre": "因为", "count": 13 },
+      { "genre": "生命", "count": 13 },
+      { "genre": "思想", "count": 13 },
+      { "genre": "这种", "count": 13 },
+      { "genre": "很多", "count": 13 },
+      { "genre": "新浪潮", "count": 12 },
+      { "genre": "需要", "count": 12 },
+      { "genre": "女性", "count": 12 },
+      { "genre": "人物", "count": 12 },
+      { "genre": "可能", "count": 12 },
+      { "genre": "音乐", "count": 12 },
+      { "genre": "完全", "count": 12 },
+      { "genre": "字幕", "count": 12 },
+      { "genre": "Karina", "count": 12 },
+      { "genre": "追求", "count": 12 },
+      { "genre": "12", "count": 12 },
+      { "genre": "手法", "count": 11 },
+      { "genre": "一段", "count": 11 },
+      { "genre": "非常", "count": 11 },
+      { "genre": "Anna", "count": 11 },
+      { "genre": "结局", "count": 11 },
+      { "genre": "关于", "count": 11 },
+      { "genre": "灵魂", "count": 11 },
+      { "genre": "感觉", "count": 11 },
+      { "genre": "为了", "count": 11 },
+      { "genre": "开始", "count": 11 },
+      { "genre": "真是", "count": 10 },
+      { "genre": "他人", "count": 10 },
+      { "genre": "完美", "count": 10 },
+      { "genre": "女主角", "count": 10 },
+      { "genre": "文本", "count": 10 },
+      { "genre": "拍摄", "count": 10 },
+      { "genre": "章节", "count": 10 },
+      { "genre": "哲学家", "count": 10 },
+      { "genre": "Nana", "count": 10 },
+      { "genre": "这部", "count": 10 },
+      { "genre": "技巧", "count": 10 },
+      { "genre": "方式", "count": 10 },
+      { "genre": "所以", "count": 10 },
+      { "genre": "像是", "count": 10 },
+      { "genre": "导演", "count": 10 },
+      { "genre": "美丽", "count": 9 },
+      { "genre": "借给", "count": 9 },
+      { "genre": "不同", "count": 9 },
+      { "genre": "世界", "count": 9 },
+      { "genre": "只有", "count": 9 },
+      { "genre": "爱伦", "count": 9 },
+      { "genre": "最终", "count": 9 },
+      { "genre": "声音", "count": 9 },
+      { "genre": "凝视", "count": 9 },
+      { "genre": "可以", "count": 9 }
+    ];
+
+    // 创建SVG容器
+    var bodyElem = document.querySelector("body")
+    var width = bodyElem.clientWidth * 1.2;
+    var height = bodyElem.clientHeight * 1.2;
+    var svg = d3.select("body")
+      .append("svg")
+      .attr("width", width)
+      .attr("height", height);
+
+    // 设置词云布局
+    var layout = d3.layout.cloud()
+      .size([width, height])
+      .words(data.map(function(d) {
+        return { text: d.genre, size: d.count };
+      }))
+      .padding(1)
+      .rotate(function() { return ~~(Math.random() * 2) * 90; })
+      .font("Arial")
+      .fontSize(function(d) { return d.size; })
+      .on("end", draw);
+
+    // 启动词云布局
+    layout.start();
+
+    // 绘制词云图
+    function draw(words) {
+      svg.append("g")
+        .attr("transform", "translate(" + width / 2 + ", " + height / 2 + ")")
+        .selectAll("text")
+        .data(words)
+        .enter()
+        .append("text")
+        .attr("class", "shape")
+        .style("font-size", function(d) { return d.size + "px"; })
+        .style("fill", function(d, i) {
+          var colors = ["#181817", "#3B3838", "#767171", "#B0ABAB", "#D0CECE"];
+          return colors[i % colors.length];
+        })
+        .attr("text-anchor", "middle")
+        .attr("transform", function(d) { return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")"; })
+        .text(function(d) { return d.text; });
+    }
+  </script>
+</body>
+</html>

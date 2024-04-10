@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  position: relative;
+  margin: 0;
+}
+html {
+  overflow: hidden;
+}
+path.slice{
+    stroke-width:2px;
+}
+polyline{
+    opacity: .3;
+    stroke: black;
+    stroke-width: 2px;
+    fill: none;
+} 
+svg text.percent{
+    fill:white;
+    text-anchor:middle;
+    font-size:12px;
+}
+.legend {
+  font-size: 12px;
+  font-weight: bold;
+}
+</style>
+<body>
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="Donut3D.js"></script>
+<script>
+Donut3D.labelPosition = function(d, rx, ry){
+    var midAngle = (d.startAngle + d.endAngle) / 2;
+    var x = Math.cos(midAngle) * rx;
+    var y = Math.sin(midAngle) * ry;
+    return [x, y];
+};
+
+var salesData=[
+    {label:"⭐⭐⭐⭐⭐", color:"#181817"},
+    {label:"⭐⭐⭐⭐", color:"#3B3838"},
+    {label:"⭐⭐⭐", color:"#767171"},
+    {label:"⭐⭐", color:"#B0ABAB"},
+    {label:"⭐", color:"#D0CECE"}
+];
+
+var svg = d3.select("body").append("svg").attr("width",700).attr("height",350);
+
+svg.append("g").attr("id","salesDonut");
+
+Donut3D.draw("salesDonut", randomData(), 200, 200, 160, 120, 30, 0.4);
+
+function changeData(){
+    Donut3D.transition("salesDonut", randomData(), 130, 100, 30, 0.4);
+}
+
+function randomData(){
+    return [
+        { value: 39.2, label: '⭐⭐⭐⭐⭐️', color: "#3B3838" },
+        { value: 47.4, label: '⭐⭐⭐⭐', color: "#767171" },
+        { value: 12, label: '⭐⭐⭐', color: "#B0ABAB" },
+        { value: 1.1, label: '⭐⭐', color: "#D0CECE" },
+        { value: 0.2, label: '⭐', color: "#F5F7F9" }
+    ];
+}
+
+// 添加图例
+var legend = svg.selectAll(".legend")
+    .data(salesData)
+    .enter().append("g")
+    .attr("class", "legend")
+    .attr("transform", function(d, i) { return "translate(200," + i * 20 + ")"; });
+
+legend.append("rect")
+    .attr("x", 160)
+    .attr("y", 10)
+    .attr("width", 18)
+    .attr("height", 18)
+    .style("fill", function(d) { 
+      // 创建渐变
+      var gradient = svg.append("defs")
+        .append("linearGradient")
+        .attr("id", "gradient-" + d.label)
+        .attr("gradientUnits", "userSpaceOnUse")
+        .attr("x1", "0%").attr("y1", "0%")
+        .attr("x2", "100%").attr("y2", "0%");
+
+      // 添加渐变色段
+      gradient.append("stop")
+        .attr("offset", "0%")
+        .attr("stop-color", d.color);
+
+      gradient.append("stop")
+        .attr("offset", "100%")
+        .attr("stop-color", "#ffffff");
+
+      return "url(#gradient-" + d.label + ")";
+    });
+
+legend.append("text")
+    .attr("x", 185)
+    .attr("y", 19)
+    .attr("dy", ".35em")
+    .style("text-anchor", "start")
+    .text(function(d) { return d.label; });
+</script>
+</body>

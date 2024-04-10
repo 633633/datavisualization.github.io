@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>豆瓣Top250电影类型统计词云图</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3-cloud@1.2.7/build/d3.layout.cloud.js"></script>
+  <style>
+    html{
+      width: 100% ;
+      height: 100% ;
+      overflow: hidden;
+    }
+    body {
+      width: 100%;
+      height: 100%;
+    }
+    /* 设置字体样式 */
+    text {
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+    }
+    
+    /* 设置词云图形状 */
+    .shape {
+      clip-path: url(/Users/jinxiao/Downloads/apache-tomcat-9.0.36/webapps/dataviz2023/期末/人1.png);
+    }
+
+    /* 光标交互效果 */
+    .shape:hover {
+      fill: rgb(233, 201, 87);
+      transform: scale(1.2);
+      transition: fill 1s, transform 1s;
+    }
+  </style>
+</head>
+<body>
+  <svg width="0" height="0">
+    <defs>
+      <!-- 定义词云图形状的剪辑路径 -->
+      <clipPath id="shapeClipPath">
+        <image xlink:href="shape.jpg" width="800" height="500" />
+      </clipPath>
+    </defs>
+  </svg>
+  <script>
+    // 数据：豆瓣Top250榜单中前20名电影的类型统计
+    var data = [
+ { "genre": "世界", "count": 93 },  
+{ "genre": "杨德昌", "count": 62 },  
+{ "genre": "小四", "count": 55 },  
+{ "genre": "小时", "count": 53 },  
+{ "genre": "少年", "count": 51 },  
+{ "genre": "时代", "count": 46 },  
+{ "genre": "改变", "count": 41 },  
+{ "genre": "小明", "count": 41 },  
+{ "genre": "没有", "count": 40 },  
+{ "genre": "青春", "count": 37 },  
+{ "genre": "社会", "count": 34 },  
+{ "genre": "最后", "count": 31 },  
+{ "genre": "台湾", "count": 31 },  
+{ "genre": "故事", "count": 30 },  
+{ "genre": "四个", "count": 24 },  
+{ "genre": "修复", "count": 23 },  
+{ "genre": "这部", "count": 22 },  
+{ "genre": "喜欢", "count": 22 },  
+{ "genre": "哈尼", "count": 21 },  
+{ "genre": "人物", "count": 21 },  
+{ "genre": "不会", "count": 21 },  
+{ "genre": "知道", "count": 20 },  
+{ "genre": "年代", "count": 20 },  
+{ "genre": "真的", "count": 19 },  
+{ "genre": "现实", "count": 19 },  
+{ "genre": "导演", "count": 19 },  
+{ "genre": "叙事", "count": 19 },  
+{ "genre": "角色", "count": 18 },  
+{ "genre": "牯岭", "count": 18 },  
+{ "genre": "杀人", "count": 18 },  
+{ "genre": "觉得", "count": 17 },  
+{ "genre": "生活", "count": 17 },  
+{ "genre": "弱者", "count": 17 },  
+{ "genre": "理想", "count": 16 },  
+{ "genre": "影片", "count": 16 },  
+{ "genre": "人生", "count": 16 },
+{ "genre": "看到", "count": 15 },  
+{ "genre": "镜头", "count": 14 },  
+{ "genre": "生命", "count": 14 },  
+{ "genre": "残酷", "count": 14 },  
+{ "genre": "张震", "count": 14 },  
+{ "genre": "崩塌", "count": 14 },  
+{ "genre": "真正", "count": 13 },  
+{ "genre": "悲剧", "count": 13 },  
+{ "genre": "史诗", "count": 13 },  
+{ "genre": "压抑", "count": 13 },  
+{ "genre": "之后", "count": 13 },  
+{ "genre": "黑暗", "count": 12 },  
+{ "genre": "终于", "count": 12 },  
+{ "genre": "爱情", "count": 12 },  
+{ "genre": "每个", "count": 12 },  
+{ "genre": "整个", "count": 12 },  
+{ "genre": "小马", "count": 12 },  
+{ "genre": "事件", "count": 12 },  
+{ "genre": "选择", "count": 11 },  
+{ "genre": "细节", "count": 11 },  
+{ "genre": "永远", "count": 11 },  
+{ "genre": "成长", "count": 11 },  
+{ "genre": "感觉", "count": 11 },  
+{ "genre": "历史", "count": 11 },  
+{ "genre": "不要", "count": 11 },  
+{ "genre": "理想主义者", "count": 10 },  
+{ "genre": "理想主义", "count": 10 },  
+{ "genre": "环境", "count": 10 },  
+{ "genre": "猫王", "count": 10 },
+{ "genre": "毁灭", "count": 10 },  
+{ "genre": "时间", "count": 10 },  
+{ "genre": "手电筒", "count": 10 },  
+{ "genre": "女人", "count": 10 },  
+{ "genre": "可能", "count": 10 },  
+{ "genre": "作品", "count": 10 },  
+{ "genre": "不能", "count": 10 },  
+{ "genre": "观众", "count": 9 },  
+{ "genre": "真实", "count": 9 },  
+{ "genre": "父亲", "count": 9 },  
+{ "genre": "曾经", "count": 9 },  
+{ "genre": "情绪", "count": 9 },  
+{ "genre": "属于", "count": 9 },  
+{ "genre": "只能", "count": 9 },  
+{ "genre": "之中", "count": 9 },  
+{ "genre": "60", "count": 9 },  
+{ "genre": "问题", "count": 8 },  
+{ "genre": "结尾", "count": 8 },  
+{ "genre": "死亡", "count": 8 },  
+{ "genre": "最终", "count": 8 },  
+{ "genre": "明白", "count": 8 },  
+{ "genre": "所谓", "count": 8 },  
+{ "genre": "感情", "count": 8 },  
+{ "genre": "实在", "count": 8 },  
+{ "genre": "好像", "count": 8 },  
+{ "genre": "伟大", "count": 8 },  
+{ "genre": "个人", "count": 8 },  
+{ "genre": "非常", "count": 7 },  
+{ "genre": "这是", "count": 7 },  
+{ "genre": "语言", "count": 7 },  
+{ "genre": "本片", "count": 7 },  
+{ "genre": "日子", "count": 7 },  
+{ "genre": "政治", "count": 7 },  
+{ "genre": "战争", "count": 7 }
+    ];
+
+    // 创建SVG容器
+    var bodyElem = document.querySelector("body")
+    var width = bodyElem.clientWidth * 1.2;
+    var height = bodyElem.clientHeight * 1.2;
+    var svg = d3.select("body")
+      .append("svg")
+      .attr("width", width)
+      .attr("height", height);
+
+    // 设置词云布局
+    var layout = d3.layout.cloud()
+      .size([width, height])
+      .words(data.map(function(d) {
+        return { text: d.genre, size: d.count };
+      }))
+      .padding(1)
+      .rotate(function() { return ~~(Math.random() * 2) * 90; })
+      .font("Arial")
+      .fontSize(function(d) { return d.size; })
+      .on("end", draw);
+
+    // 启动词云布局
+    layout.start();
+
+    // 绘制词云图
+    function draw(words) {
+      svg.append("g")
+        .attr("transform", "translate(" + width / 2 + ", " + height / 2 + ")")
+        .selectAll("text")
+        .data(words)
+        .enter()
+        .append("text")
+        .attr("class", "shape")
+        .style("font-size", function(d) { return d.size + "px"; })
+        .style("fill", function(d, i) {
+          var colors = ["#3D281F", "#4A3B2B", "#5C4C3B", "#75674E", "#988469"];
+          return colors[i % colors.length];
+        })
+        .attr("text-anchor", "middle")
+        .attr("transform", function(d) { return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")"; })
+        .text(function(d) { return d.text; });
+    }
+  </script>
+</body>
+</html>

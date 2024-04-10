@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>教父评论词云</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3-cloud@1.2.7/build/d3.layout.cloud.js"></script>
+  <style>
+    html{
+      width: 100% ;
+      height: 100% ;
+      overflow: hidden;
+    }
+    body {
+      width: 100%;
+      height: 100%;
+    }
+    text {
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+    }
+
+    
+    .shape {
+      clip-path: url(/Users/jinxiao/Downloads/apache-tomcat-9.0.36/webapps/dataviz2023/期末/人1.png);
+    }
+
+   
+    .shape:hover {
+      fill: rgb(233, 201, 87);
+      transform: scale(1.2);
+      transition: fill 1s, transform 1s;
+    }
+  </style>
+</head>
+<body>
+  <svg width="0" height="0">
+    <defs>
+      <clipPath id="shapeClipPath">
+        <image xlink:href="shape.jpg" width="800" height="500" />
+      </clipPath>
+    </defs>
+  </svg>
+  <script>
+    var data = [
+  { "genre": "教父", "count": 117 },  
+  { "genre": "男人", "count": 46 },  
+  { "genre": "电影", "count": 91 },  
+  { "genre": "黑帮", "count": 39 },  
+  { "genre": "经典", "count": 38 },  
+  { "genre": "白兰度", "count": 36 },  
+  { "genre": "马龙", "count": 33 },  
+  { "genre": "家族", "count": 32 },  
+  { "genre": "没有", "count": 28 },  
+  { "genre": "人物", "count": 28 },  
+  { "genre": "觉得", "count": 27 },  
+  { "genre": "喜欢", "count": 26 },  
+  { "genre": "帕西诺", "count": 23 },  
+  { "genre": "好看", "count": 21 },  
+  { "genre": "真的", "count": 20 },  
+  { "genre": "时代", "count": 20 },  
+  { "genre": "麦克", "count": 19 },  
+  { "genre": "洗礼", "count": 19 },  
+  { "genre": "故事", "count": 19 },  
+  { "genre": "成为", "count": 19 },  
+  { "genre": "最后", "count": 17 },  
+  { "genre": "婚礼", "count": 17 },  
+  { "genre": "这部", "count": 16 },  
+  { "genre": "美国", "count": 16 },  
+  { "genre": "片子", "count": 16 },  
+  { "genre": "阿尔", "count": 15 },  
+  { "genre": "女人", "count": 15 },  
+  { "genre": "伟大", "count": 15 },  
+  { "genre": "非常", "count": 14 },  
+  { "genre": "这种", "count": 14 },  
+  { "genre": "演技", "count": 14 },  
+  { "genre": "教堂", "count": 14 },  
+  { "genre": "女性", "count": 14 },  
+  { "genre": "镜头", "count": 13 },  
+  { "genre": "重温", "count": 13 },  
+  { "genre": "权力", "count": 13 },  
+  { "genre": "剪辑", "count": 13 },  
+  { "genre": "其实", "count": 13 },  
+  { "genre": "科波", "count": 12 },  
+  { "genre": "知道", "count": 12 },  
+  { "genre": "感觉", "count": 12 },  
+  { "genre": "开头", "count": 12 },  
+  { "genre": "家庭", "count": 12 },  
+  { "genre": "世界", "count": 12 },  
+  { "genre": "需要", "count": 11 },  
+  { "genre": "结尾", "count": 11 },  
+  { "genre": "永远", "count": 11 },  
+  { "genre": "应该", "count": 11 },  
+  { "genre": "音乐", "count": 10 },  
+  { "genre": "银幕", "count": 10 },  
+  { "genre": "这是", "count": 10 },  
+  { "genre": "节奏", "count": 10 },  
+  { "genre": "男性", "count": 10 },  
+  { "genre": "暴力", "count": 10 },  
+  { "genre": "成长", "count": 10 },       
+ { "genre": "圣经", "count": 10 },  
+{ "genre": "不要", "count": 10 },  
+{ "genre": "调度", "count": 9 },  
+{ "genre": "无法", "count": 9 },  
+{ "genre": "实在", "count": 9 },  
+{ "genre": "场景", "count": 9 },  
+{ "genre": "叙事", "count": 9 },  
+{ "genre": "配乐", "count": 8 },  
+{ "genre": "表演", "count": 8 },  
+{ "genre": "确实", "count": 8 },  
+{ "genre": "真正", "count": 8 },  
+{ "genre": "杀戮", "count": 8 },  
+{ "genre": "所谓", "count": 8 },  
+{ "genre": "往事", "count": 8 },  
+{ "genre": "年轻", "count": 8 },  
+{ "genre": "小说", "count": 8 },  
+{ "genre": "完美", "count": 8 },  
+{ "genre": "复仇", "count": 8 },  
+{ "genre": "史诗", "count": 8 },  
+{ "genre": "儿子", "count": 8 },  
+{ "genre": "man", "count": 8 },  
+{ "genre": "黑帮片", "count": 7 },  
+{ "genre": "适合", "count": 7 },  
+{ "genre": "角色", "count": 7 },  
+{ "genre": "血腥", "count": 7 },  
+{ "genre": "看到", "count": 7 },  
+{ "genre": "理解", "count": 7 },  
+{ "genre": "现在", "count": 7 },  
+{ "genre": "气质", "count": 7 },  
+{ "genre": "情节", "count": 7 },  
+{ "genre": "影史", "count": 7 },  
+{ "genre": "完全", "count": 7 },  
+{ "genre": "医院", "count": 7 },  
+{ "genre": "剧情", "count": 7 },  
+{ "genre": "值得", "count": 7 },  
+{ "genre": "人生", "count": 7 },  
+{ "genre": "不同", "count": 7 },  
+{ "genre": "魅力", "count": 6 },  
+{ "genre": "面对", "count": 6 },  
+{ "genre": "重看", "count": 6 },  
+{ "genre": "选择", "count": 6 },  
+{ "genre": "观众", "count": 6 },  
+{ "genre": "西西里", "count": 6 },  
+{ "genre": "蒙太奇", "count": 6 },  
+{ "genre": "老大", "count": 6 },  
+{ "genre": "绝对", "count": 6 },  
+{ "genre": "精彩", "count": 6 },  
+{ "genre": "演员", "count": 6 },  
+{ "genre": "沉稳", "count": 6 },  
+{ "genre": "欣赏", "count": 6 },  
+{ "genre": "本片", "count": 6 },  
+{ "genre": "暗杀", "count": 6 },  
+{ "genre": "时间", "count": 6 },  
+{ "genre": "接受", "count": 6 },  
+{ "genre": "意义", "count": 6 },  
+{ "genre": "小儿子", "count": 6 },  
+{ "genre": "家暴", "count": 6 },  
+{ "genre": "完成", "count": 6 },  
+{ "genre": "威严", "count": 6 },  
+{ "genre": "声音", "count": 6 },  
+{ "genre": "关上", "count": 6 },
+{ "genre": "黑暗", "count": 5 },  
+{ "genre": "首领", "count": 5 },  
+{ "genre": "里昂", "count": 5 },  
+{ "genre": "运用", "count": 5 },  
+{ "genre": "资料馆", "count": 5 },  
+{ "genre": "责任", "count": 5 },  
+{ "genre": "系列", "count": 5 },  
+{ "genre": "看过", "count": 5 },  
+{ "genre": "犯罪", "count": 5 },  
+{ "genre": "杜比", "count": 5 },  
+{ "genre": "是因为", "count": 5 },  
+{ "genre": "方式", "count": 5 },  
+{ "genre": "承诺", "count": 5 },  
+{ "genre": "很难", "count": 5 },  
+{ "genre": "开场", "count": 5 },  
+{ "genre": "平行", "count": 5 },  
+{ "genre": "始终", "count": 5 },  
+{ "genre": "妻子", "count": 5 },  
+{ "genre": "妹妹", "count": 5 },  
+{ "genre": "好像", "count": 5 },  
+{ "genre": "后来", "count": 5 },  
+{ "genre": "厌女", "count": 5 },  
+{ "genre": "几乎", "count": 5 },  
+{ "genre": "内心", "count": 5 },  
+{ "genre": "关系", "count": 5 },  
+{ "genre": "体会", "count": 5 },  
+{ "genre": "价值观", "count": 5 },  
+{ "genre": "以后", "count": 5 },  
+{ "genre": "事关", "count": 5 },  
+{ "genre": "主角", "count": 5 },  
+{ "genre": "不错", "count": 5 }
+
+  ];
+
+    var bodyElem = document.querySelector("body")
+    var width = bodyElem.clientWidth * 1.2;
+    var height = bodyElem.clientHeight * 1.2;
+    var svg = d3.select("body")
+      .append("svg")
+      .attr("width", width)
+      .attr("height", height);
+
+    var layout = d3.layout.cloud()
+      .size([width, height])
+      .words(data.map(function(d) {
+        return { text: d.genre, size: d.count };
+      }))
+      .padding(1)
+      .rotate(function() { return ~~(Math.random() * 2) * 90; })
+      .font("Arial")
+      .fontSize(function(d) { return d.size; })
+      .on("end", draw);
+
+    
+    layout.start();
+
+    
+    function draw(words) {
+      svg.append("g")
+        .attr("transform", "translate(" + width / 2 + ", " + height / 2 + ")")
+        .selectAll("text")
+        .data(words)
+        .enter()
+        .append("text")
+        .attr("class", "shape")
+        .style("font-size", function(d) { return d.size + "px"; })
+        .style("fill", function(d, i) {
+          var colors = ["#8B4513", "#A0522D", "#CD853F", "#D2691E", "#DEB887"];
+          return colors[i % colors.length];
+        })
+        .attr("text-anchor", "middle")
+        .attr("transform", function(d) { return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")"; })
+        .text(function(d) { return d.text; });
+    }
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,126 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>基于D3的音乐可视化</title>
+    
+  </head>
+  <body>
+    
+    <script src="https://d3js.org/d3.v7.min.js"></script> 
+    <style>
+      h1 {
+        text-align: center;
+        font-family: 'Microsoft YaHei';
+         /* 设置带有透明度的背景颜色和背景图片 */
+        color: #463f3a; /* 设置文字颜色为白色 */
+        padding: 10px 10px; /* 添加内边距 */
+      }
+      h2 {
+  font-size: 20px; /* 设置较小的字号 */
+  text-align: right;
+  color: #463f3a;
+}
+      
+    </style>
+    <h1>开到荼蘼</h1>
+    <h2>金潇 李雨宸</h2>
+    <audio id="audioElement" src="./王菲 - 开到荼蘼.mp3" controls="controls"></audio>
+    
+    <script>
+      var audioCtx;
+      var audioElement = document.getElementById('audioElement');
+      var audioSrc;
+      var analyser;
+      var frequencyData = new Uint8Array(100);
+      var width = 1500;
+      var height = 500;
+      var innerR = 80;
+      var dataset = new Array(100);
+
+      // 添加用户操作事件来启动AudioContext
+      document.addEventListener('click', function() {
+        // debugger
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        audioSrc = audioCtx.createMediaElementSource(audioElement);
+        analyser = audioCtx.createAnalyser();
+
+        // 绑定分析器到音频媒体元素
+        audioSrc.connect(analyser);
+        audioSrc.connect(audioCtx.destination);
+        navigator.mediaDevices.getUserMedia({ audio: true });
+
+        renderChart(); // 在创建分析器后立即调用可视化函数
+      });
+
+      for (var i = 0; i < dataset.length; i++) {
+        dataset[i] = new Array();
+        dataset[i][0] = 120;
+        dataset[i][1] = 100 + Math.floor(Math.random() * (255 - 100));
+      }
+
+      var pie = d3.pie()
+        .value(function(d) { return d[0]; });
+
+      var arcPath = d3.arc()
+        .innerRadius(innerR);
+
+      var svg = d3.select("body")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+      // 定义渐变
+      var gradient = svg.append("defs")
+        .append("linearGradient")
+        .attr("id", "gradient")
+        .attr("x1", "0%")
+        .attr("y1", "0%")
+        .attr("x2", "100%")
+        .attr("y2", "0%");
+
+      gradient.append("stop")
+        .attr("offset", "0%")
+        .attr("stop-color", "#8a817c");
+
+      gradient.append("stop")
+        .attr("offset", "100%")
+        .attr("stop-color", "#bcb8b1");
+
+      var arcs = svg.selectAll("path")
+        .data(pie(dataset))
+        .enter()
+        .append("path")
+        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+        .attr("fill", "url(#gradient)") // 使用渐变填充
+        .attr("stroke", "#FFF")
+        
+        .attr("d", function(d, i) {
+          arcPath.outerRadius(dataset[i][1]);
+          return arcPath(d);
+        });
+
+      function renderChart() {
+        // debugger
+    	  requestAnimationFrame(renderChart);
+    	  analyser.getByteFrequencyData(frequencyData);
+    	  
+    	  // 更新dataset以反映音频频谱数据
+        console.log(dataset)
+    	  for (var i = 0; i < dataset.length; i++) {
+    	    dataset[i][1] = frequencyData[i]; // 使用音频频谱数据更新dataset
+    	  }
+    	  
+    	  // 重新绘制条形图以反映新的数据
+    	  svg.selectAll('path')
+    	    .data(pie(dataset))
+    	    .attr("d", function(d, i) {
+    	      arcPath.outerRadius(frequencyData[i] + innerR);
+    	      return arcPath(d);
+    	    });
+    	}
+
+      // var body = document.body;
+      // body.style.backgroundImage = 'url(./IMG_5664.JPG)';
+    </script>
+  </body>
+</html>

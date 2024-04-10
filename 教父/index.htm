@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>教父</title>
+  <script src="./js/d3.v3.min.js"></script> 
+  <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+  <script type="text/javascript" src="js/super_slider.js"></script>
+  <link rel="stylesheet" href="./css/swiper-bundle.min.css" />
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+    body{
+      width: 100%;
+      position: relative;
+    }
+    @font-face {
+      font-family: 'Ding';
+      src: url('./font/DingTalk\ JinBuTi.ttf') format('truetype');
+    }
+    .bg {
+      width: 100%;
+    }
+    .return {
+      padding-right: .5%;
+      position: absolute;
+      top: 1.1%;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+      width: 144px;
+      font-size: 36px;
+      font-family: 'Ding';
+      cursor: pointer;
+      color: #fff;
+    }
+    .return a{
+      color: rgb(170, 170, 170);
+      text-decoration: none;
+    }
+    .return.num-2 {
+      top: auto;
+      bottom: 1.15%;
+    }
+    video {
+      position: absolute;
+      top: 25%;
+      width: 60%;
+      right: 4%;
+    }
+    .relation {
+      font-family: 'Ding';
+      position: absolute;
+      top: 53%;
+      left: 2.2%;
+      width: 44.5%;
+      height: 11.3%;
+    }
+    #pie {
+      position: absolute;
+      top: 70.8%;
+      left: 9%;
+      width: 620px;
+      height: 420px;
+    }
+    #pie iframe {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    #wordCloud {
+      position: absolute;
+      top: 71.5%;
+      right: 8%;
+      width: 51%;
+      height: 16%;
+    }
+    #wordCloud iframe {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    .swiper {
+      position: absolute;
+      bottom: 3%;
+      left: 0;
+      right: 0px;
+      width: calc(100% - 100px);
+      height: 7.5%;
+      overflow: hidden;
+      background-color: #000;
+    }
+    .swiper-wrapper {
+      height: calc(100% - 44px);
+    }
+
+    .swiper-slide {
+      text-align: center;
+      font-size: 18px;
+      background: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .swiper-slide img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .swiper .top-bg {
+      width: 100%;
+      height: 22px;
+      background: url(./jpt.png);
+    }
+    .swiper .bottom-bg {
+      width: 100%;
+      height: 22px;
+      background: url(./jpt.png);
+    }
+
+    .my-music-btn {
+      position: absolute;
+      top: 31%;
+      left: 11%;
+      width: 400px;
+      height: 400px;
+      background-size: cover;
+      border: none;
+      outline: none;
+    }
+
+    .my-music-btn-bg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      width: 276px;
+      height: 276px;
+      background: url(./photo/10.jpg) center center no-repeat;
+      border-radius: 50%;
+      /* animation: music-btn-anim 20s infinite linear; */
+    }
+
+    .my-music-btn.rotate {
+      animation-play-state: paused;
+    }
+
+    @keyframes music-btn-anim {
+      from {
+          transform: rotate(0deg);
+      }
+
+      to {
+          transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <img class="bg" src="./bg.png" alt="">
+
+  <div class="return"><a href="../index.html">返回首页</a></div>
+  <div class="return num-2"><a href="../index.html">返回首页</a></div>
+
+  <video src="./petal_20240102_230433.mp4" controls></video>
+
+  <div class="my-music-btn">
+    <div class="my-music-btn-bg"></div>
+    <canvas class="my-canvas"></canvas>
+  </div>
+  <script src="./js/audio.js"></script>
+
+  <div id="relation" class="relation"></div>
+  <script src="./js/relation.js"></script>
+
+  <div id="pie">
+    <iframe src="./pie/index.html" frameborder="0"></iframe>
+  </div>
+
+  <div id="wordCloud">
+    <iframe src="./《教父》评论词云.html" frameborder="0"></iframe>
+  </div>
+
+  
+
+  <div class="mySwiper swiper"> 
+    <div class="top-bg"></div>
+    <div class="swiper-wrapper">
+      <div class="swiper-slide"><img src="./photo/1.jpeg"></div>
+      <div class="swiper-slide"><img src="./photo/2.jpeg"></div>
+      <div class="swiper-slide"><img src="./photo/3.jpeg"></div>
+      <div class="swiper-slide"><img src="./photo/4.jpg"></div>
+      <div class="swiper-slide"><img src="./photo/5.jpg"></div>
+      <div class="swiper-slide"><img src="./photo/6.jpg"></div>
+      <div class="swiper-slide"><img src="./photo/7.jpg"></div>
+      <div class="swiper-slide"><img src="./photo/8.jpg"></div>
+      <div class="swiper-slide"><img src="./photo/9.jpg"></div>
+      <div class="swiper-slide"><img src="./photo/10.jpg"></div>
+    </div>
+    <div class="bottom-bg"></div>
+  </div>
+  <script src="js/swiper-bundle.min.js"></script>
+  <script type="text/javascript">
+    var swiper = new Swiper(".mySwiper", {
+      slidesPerView: 6,
+      spaceBetween: 20,
+      // loop: true,
+      autoplay: {
+        delay: 2500,
+        disableOnInteraction: false,
+      },
+      pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+      },
+    });
+</script>
+</body>
+</html>
